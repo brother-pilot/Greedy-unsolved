@@ -56,31 +56,18 @@ namespace Greedy
                         }
                     }
                 }
-
                 notVisited.Remove(toOpen);
             }
-
-            //var result = new List<Point>();
-            //while (end != null)
-            //{
-            //    result.Add(end);
-            //    end = track[end].Previous;
-            //}
-            //result.Reverse();
-            //return result;
-
         }
         PathWithCost ConvertResult(Dictionary<Node, DijkstraData> track, Node node)
         {
             var result = new List<Point>();
-            var result2 = new Point[track.Count];
             var end = node;
             while (node != null)
             {
                 result.Add(node.NodePoint);
                 node = track[node].Previous;
             }
-            //result2=result.;
             result.Reverse();
             return new PathWithCost(track[end].Price, result.ToArray());
         }
@@ -170,10 +157,6 @@ namespace Greedy
     public class Graph
     {
         private List<Node> nodes = new List<Node>();
-        //public Graph(int nodesCount)
-        //{
-        //    nodes = Enumerable.Range(0, nodesCount).Select(z => new Node(z)).ToArray();
-        //}
         public void AddNode(Node node)
         {
             nodes.Add(node);
@@ -191,6 +174,4 @@ namespace Greedy
             }
         }
     }
-
-
 }
