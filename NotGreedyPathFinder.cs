@@ -86,6 +86,7 @@ namespace Greedy
 			//	//result.Add(arrVar);
 			//	yield return arrVar;
 			//}
+
 			//for (int i = 0; i < permutation.Length; i++)
 			//{
 			//             for (int j = 0; j < countChests; j++)
