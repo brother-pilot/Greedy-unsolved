@@ -50,7 +50,7 @@ namespace Greedy
 				if (chests> bestChests)
 				{
 					bestPrice = price;
-					intItem = item;
+					intItem = arrVar;
 					bestChests = chests;
 				}
 				if (bestPrice < state.InitialEnergy && bestChests == chestArray.Length) break;
@@ -77,28 +77,7 @@ namespace Greedy
 
 		static IEnumerable<int[]> MakePermutations(int[] permutation, int countChests,State state)
 		{
-			//List<int[]> result;
-			//if (countChests == permutation.Length)
-			//{
-			//	var arrVar = new int[permutation.Length]; //интересный момент как удалось отвязать ссылку на permutation при копировании в список result
-			//	for (int i = 0; i < permutation.Length; i++)
-			//		arrVar[i] = permutation[i];
-			//	//result.Add(arrVar);
-			//	yield return arrVar;
-			//}
-
-			//for (int i = 0; i < permutation.Length; i++)
-			//{
-			//             for (int j = 0; j < countChests; j++)
-			//             {
-			//		permutation[countChests] = i;
-			//	}
-			//	var index = Array.IndexOf(permutation, i, 0, countChests);
-			//	if (index != -1)
-			//		continue;
-			//	permutation[countChests] = i;
-			//	MakePermutations(permutation, countChests + 1, state);
-			//}
+		
 			bool Less<T>(T value_0, T value_1) where T : IComparable
 			{
 				return value_0.CompareTo(value_1) < 0;
