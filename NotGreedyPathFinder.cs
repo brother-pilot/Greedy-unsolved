@@ -12,9 +12,7 @@ namespace Greedy
         public int Price { get; set; }
         public int Chests { get; set; }
         public Point Previous { get; set; }
-        public List<Point> ChestList { get; set; }   //= new List<Point>(); 
-        //public List<PathWithCost>  PWC { get; set; }
-
+        public List<Point> ChestList { get; set; }   
     }
     public class NotGreedyPathFinder : IPathFinder
     {
@@ -78,7 +76,7 @@ namespace Greedy
             int[] intItem = new int[state.Chests.Count];
             Point intPoint = state.Position;
             int bestChests = int.MinValue;
-            var visited= new HashSet<Point>();
+            var visited= new HashSet<String>();
             //visited.Add(state.Position);
             while (stack.Count != 0)
             {
@@ -91,27 +89,40 @@ namespace Greedy
                 chestArray2.Remove(point);
                 //yield return point;
                 //result.Add(point);
-                var possible=paths.GetPathsByDijkstra(state, point, chestArray2);
+                List<PathWithCost> possible = new List<PathWithCost>();
+                if (!visited.Contains(point.ToString()))
+                    possible = paths.GetPathsByDijkstra(state, point, chestArray2).ToList();
+                else {
+                    continue;
+                    foreach (var item in chestArray2)
+                    {
+                        var yy = item.ToString() + point.ToString();
+                        var ttt = trackEval[item.ToString() + point.ToString()];
+                        possible.Add(ttt);
+                    }
+                        }
+                visited.Add(point.ToString());
+                //var chestArray3=possible.
                 //foreach (var nextPoint in paths.GetPathsByDijkstra(state, point, chestArray2).Where(n => !visited.Contains(n.End)))
-                foreach (var nextPoint in possible)
+                foreach (var nextPoint in possible.Select(x=>x.End))
                 {
                     //visited.Add(nextPoint.End);
                     var chestArray = chestArray2.ToList();
                     price = pointEval[startPrev].Price;
                     chests = pointEval[startPrev].Chests;
-                    stack.Push(nextPoint.End);
-                    var startEnd = point.ToString() + nextPoint.End.ToString();
-                    var endStart = point.ToString() + nextPoint.End.ToString();
+                    stack.Push(nextPoint);
+                    var startEnd = point.ToString() + nextPoint.ToString();
+                    var endStart = nextPoint.ToString() + point.ToString();
                     if (!trackEval.ContainsKey(startEnd))
                     {
-                        trackEval[startEnd] = nextPoint;
-                        trackEval[endStart] = nextPoint;
+                        trackEval[startEnd] = possible.Where(x=>x.End==nextPoint).FirstOrDefault();
+                        trackEval[endStart] = possible.Where(x => x.End == nextPoint).FirstOrDefault();
                     }
                     //else break;
                     chests++;
                     price += trackEval[startEnd].Cost;
-                    chestArray.Remove(nextPoint.End);
-                    pointEval[nextPoint.End.ToString()+point.ToString()] = new DataNotGreedy { Price = price, 
+                    chestArray.Remove(nextPoint);
+                    pointEval[nextPoint.ToString()+point.ToString()] = new DataNotGreedy { Price = price, 
                         Chests = chests, ChestList = chestArray.ToList(), Previous = point };
                     if (price > state.Energy || chests > chestArray.Count + 1)
                     {
@@ -136,19 +147,18 @@ namespace Greedy
                     bestChests = chests;
                 }
                 previousPoint = pointEval[startPrev].Previous;
-                if (bestPrice == state.InitialEnergy && bestChests == state.Chests.Count) break;
             }
 
-            return CovertResult(intItem, trackEval, state.Position, state.Chests.ToArray(), bestChests);
+            return CovertResult(intPoint, trackEval, state.Position, state.Chests.ToArray(), bestChests);
         }
 
-        static List<Point> CovertResult(int[] intItem, Dictionary<string, PathWithCost> trackEval,
+        static List<Point> CovertResult(Point intPoint, Dictionary<string, PathWithCost> trackEval,
             Point start, Point[] chestArray, int chests)
         {
             var result = new List<Point>();
             for (int k = 0; k < chests; k++)
             {
-                Point end = chestArray[intItem[k]];
+                Point end = intPoint;
                 var startEnd = start.ToString() + end.ToString();
                 foreach (var point in trackEval[startEnd].Path.Skip(1))
                 {
