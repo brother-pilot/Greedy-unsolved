@@ -65,7 +65,7 @@ namespace Greedy
             return new PathWithCost(track[end].Cost, result.ToArray());
         }
 
-        List<Point> PossiblePoint(Point point, State state)
+        public List<Point> PossiblePoint(Point point, State state)
         {
             var direction = new int[,] { { -1, 0 }, { 1, 0 }, { 0, -1 }, { 0, 1 } };
             var result = new List<Point>();
@@ -80,15 +80,15 @@ namespace Greedy
             }
             return result;
         }
-        public IEnumerable<Point> GetIncidentNodes(Point node, State state)
+        public IEnumerable<Point> GetIncidentNodes(Point point, State state)
         {
             return new Point[]
             {
-                new Point(node.X, node.Y+1),
-                new Point(node.X, node.Y-1),
-                new Point(node.X+1, node.Y),
-                new Point(node.X-1, node.Y)
-            }.Where(point => state.InsideMap(point) && !state.IsWallAt(point));
+                new Point(point.X, point.Y+1),
+                new Point(point.X, point.Y-1),
+                new Point(point.X+1, point.Y),
+                new Point(point.X-1, point.Y)
+            }.Where(p => state.InsideMap(p) && !state.IsWallAt(p));
         }
     }
 
